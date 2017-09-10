@@ -12,8 +12,23 @@ import PostSort from '../../components/PostSort/PostSort';
 
 class HomeScene extends Component {
 
+	state = {
+		sortedBy: '-voteScore' ,
+	};
+
+	onChangeOrder( event ) {
+		this.setState( { sortedBy: event.target.value } );
+	}
+
+	constructor( props ) {
+		super( props );
+		this.onChangeOrder = this.onChangeOrder.bind( this );
+	}
 
 	render() {
+
+		const categoryFilter = this.props.match && this.props.match.params ? this.props.match.params.selectedCategory : '';
+
 		return (
 			<div>
 
@@ -23,13 +38,16 @@ class HomeScene extends Component {
 
 					<div className="row">
 						<div className="col-lg-8 col-md-10 mx-auto">
-							<PostSort/>
+							<PostSort
+								sortedBy={this.state.sortedBy}
+								onChangeOrder={this.onChangeOrder}
+							/>
 						</div>
 						<div className="col-lg-8 col-md-10 mx-auto">
-							<PostPreview/>
-							<PostPreview/>
-							<PostPreview/>
-							<PostPreview/>
+							<PostPreview
+								sortedBy={this.state.sortedBy}
+								category={categoryFilter}
+							/>
 						</div>
 					</div>
 
