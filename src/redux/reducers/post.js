@@ -2,21 +2,67 @@
  * Created by Felipe on 29/08/2017.
  */
 
-import { LOAD_POSTS } from '../actions/post';
+import { normalize } from 'normalizr';
 
-export default function postReducer( state = [] , action ) {
+import { LOAD_POSTS, DELETE_POST , LOAD_POST } from '../actions/post';
+import { POST_LIST_SCHEMA } from '../schemas';
+
+const ininitalState = {
+	ids: [] ,
+	entities: {}
+};
+
+export default function reducer( state = ininitalState , action ) {
 
 	switch ( action.type ) {
 
-		case LOAD_POSTS :
-			const { posts } = action;
+		case LOAD_POSTS: {
+
+			const { entities = {} , result = [] } = normalize( action.posts , POST_LIST_SCHEMA );
+			const { posts = {} } = entities;
+			const newIds = result.filter( r => !state.ids.find( id => r === id ) );
+			const newEntities = newIds.reduce( ( currEntities , id ) => ({
+				...currEntities ,
+				[id]: posts[ id ]
+			}) , {} );
+
 			return {
-				...state ,
-				...posts ,
+				ids: [ ...state.ids , ...newIds ] ,
+				entities: { ...state.entities , ...newEntities }
 			}
 
-		default :
-			return state
+		}
+
+		case LOAD_POST: {
+
+			const post = action.post;
+
+			return {
+				ids: [ ...state.ids.filter( id => id !== post.id ) , post.id ] ,
+				entities: { ...state.entities , [post.id]: post }
+			}
+
+		}
+
+		case DELETE_POST: {
+			const id = action.id;
+
+			return {
+				...state ,
+				entities: {
+					...state.entities ,
+					[id]: {
+						...state.entities[ id ] ,
+						deleted: true ,
+					}
+				}
+			}
+		}
+
+		default: {
+			return state;
+		}
+
 	}
 
 }

@@ -10,6 +10,7 @@ import sortBy from 'sort-by';
 
 import { getPosts } from '../../services/readable-api';
 import { loadPosts } from '../../redux/actions/post';
+import { formatPostDate } from '../../util/funcgen';
 
 
 class PostPreview extends Component {
@@ -27,11 +28,6 @@ class PostPreview extends Component {
 			dispatch( loadPosts( res ) )
 		} );
 
-	}
-
-	getPostDate( unixDate ) {
-		const dt = new Date( unixDate );
-		return dt.toString();
 	}
 
 	render() {
@@ -55,7 +51,7 @@ class PostPreview extends Component {
 								</h3>
 							</Link>
 							<p className="post-meta">
-								Posted by <strong>{post.author}</strong> - on {this.getPostDate( post.timestamp )}
+								Posted by <strong>{post.author}</strong> - on {formatPostDate( post.timestamp )}
 								<br />
 								Score: {post.voteScore}
 							</p>
@@ -71,10 +67,9 @@ class PostPreview extends Component {
 
 function mapStateToProps( { posts } ) {
 
+	console.log(posts);
 	return {
-		posts: Object.keys( posts ).reduce( ( c , k ) => {
-			return [ ...c , posts[ k ] ]
-		} , [] )
+		posts: posts.ids.map(id => posts.entities[id])
 	}
 
 }

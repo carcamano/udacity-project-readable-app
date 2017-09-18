@@ -5,7 +5,6 @@
 import React , { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import Modal from 'react-modal'
 
 import './TopBar.css';
 import { getCategories } from '../../services/readable-api';
@@ -13,19 +12,6 @@ import { loadCategories } from '../../redux/actions/category';
 
 
 class TopBar extends Component {
-
-	state = {
-		postModalOpen: false
-	};
-
-	openPostModal = () => {
-		console.log('modalOpen')
-		this.setState( { postModalOpen: true } );
-	};
-
-	closePostModal = () => {
-		this.setState( { postModalOpen: false } );
-	};
 
 	componentDidMount() {
 
@@ -65,7 +51,8 @@ class TopBar extends Component {
 							</ul>
 						</li>
 						<li className="nav-bar-list-item">
-							<a href='#' className="nav-bar-link" onClick={() => this.openPostModal()}>Add New Post</a>
+							<Link to={'/post/add'}
+							      className="nav-bar-link">Add New Post</Link>
 						</li>
 					</ul>
 				</nav>
@@ -82,20 +69,6 @@ class TopBar extends Component {
 						</div>
 					</div>
 				</header>
-
-				<Modal
-					className='modal'
-					overlayClassName='overlay'
-					isOpen={this.state.postModalOpen}
-					onRequestClose={this.closePostModal}
-					contentLabel='Modal'
-				>
-
-					<div className="modal-content">
-						<h4>Modal Header</h4>
-					</div>
-
-				</Modal>
 
 			</div>
 		);
