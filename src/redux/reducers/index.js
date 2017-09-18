@@ -6,9 +6,11 @@ import { combineReducers } from 'redux'
 
 import postReducer from './post'
 import categoryReducer from './category'
+import commentReducer from './comment'
 
 
 export default combineReducers( {
 	posts: postReducer ,
-	categories: categoryReducer
+	categories: categoryReducer ,
+	comments: commentReducer
 } )

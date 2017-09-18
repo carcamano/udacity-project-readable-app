@@ -7,20 +7,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import './TopBar.css';
-import { getCategories } from '../../services/readable-api';
-import { loadCategories } from '../../redux/actions/category';
-
 
 class TopBar extends Component {
-
-	componentDidMount() {
-
-		const { dispatch } = this.props;
-		getCategories().then( res => {
-			dispatch( loadCategories( res ) )
-		} );
-
-	}
 
 	render() {
 
@@ -76,11 +64,8 @@ class TopBar extends Component {
 }
 
 function mapStateToProps( { categories } ) {
-
 	return {
-		categories: Object.keys( categories ).reduce( ( c , k ) => {
-			return [ ...c , categories[ k ] ]
-		} , [] )
+		categories: categories.categories
 	}
 }
 

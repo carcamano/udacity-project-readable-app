@@ -4,20 +4,23 @@
 
 import { LOAD_CATEGORIES } from '../actions/category';
 
-export default function categoryReducer( state = [] , action ) {
+const initialState = {
+	categories: []
+};
+
+export default function reducer( state = initialState , action ) {
 
 	switch ( action.type ) {
+
 		case LOAD_CATEGORIES: {
 			const { categories } = action;
-			return {
-				...state ,
-				...categories
-			};
+			return { categories };
 		}
 
 		default: {
 			return state;
 		}
+
 	}
 
 }

@@ -9,8 +9,10 @@ const api = 'http://localhost:5001'
 
 
 let token = localStorage.token;
-if ( !token )
+if ( !token ) {
 	token = uuid.v4();
+	localStorage.setItem('token', token);
+}
 
 const headers = {
 	'Accept': 'application/json' ,

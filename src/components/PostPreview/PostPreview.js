@@ -39,7 +39,7 @@ class PostPreview extends Component {
 		return (
 			<div>
 
-				{p.filter( post => !post.deleted ).map( ( post ) => (
+				{p && p.filter( post => !post.deleted ).map( ( post ) => (
 					<div key={post.id}>
 						<div className="post-preview">
 							<Link to={`/post/${post.id}`}>
@@ -66,12 +66,9 @@ class PostPreview extends Component {
 }
 
 function mapStateToProps( { posts } ) {
-
-	console.log(posts);
 	return {
 		posts: posts.ids.map(id => posts.entities[id])
 	}
-
 }
 
 export default connect( mapStateToProps )( PostPreview );

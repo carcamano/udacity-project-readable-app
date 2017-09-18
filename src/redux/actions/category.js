@@ -15,6 +15,6 @@ export const loadCategories = ( categories ) => {
 
 export const fetchCategories = () => dispatch => {
 	getCategories().then( res => {
-		dispatch( loadCategories( res.categories ) )
+		dispatch( loadCategories( res ) )
 	} );
 };

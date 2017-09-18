@@ -6,10 +6,10 @@ import React , { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import { getPosts , votePost } from '../../services/readable-api';
-import { loadPost , loadPosts } from '../../redux/actions/post';
+import { deletePost , votePost } from '../../services/readable-api';
+import { loadPost } from '../../redux/actions/post';
 import { formatPostDate } from '../../util/funcgen';
-import PubishControllers from '../PubishControllers/PubishControllers';
+import PublishControllers from '../PublishControllers/PublishControllers';
 
 
 class PostDetail extends Component {
@@ -20,18 +20,30 @@ class PostDetail extends Component {
 
 	voteScore = ( vote ) => {
 		const { postId , dispatch } = this.props;
-		votePost( postId , vote )
-			.then( post => dispatch( loadPost( post ) ) );
+		votePost( postId , vote ).then( post => {
+			dispatch( loadPost( post ) )
+		} );
 	};
+
+	delete = () => {
+		const { postId , dispatch } = this.props;
+		console.log(postId);
+		deletePost( postId ).then( () => {
+			dispatch( deletePost( postId ) );
+			window.history.back();
+		} )
+
+	};
+
 
 	render() {
 
-		const { post , postId } = this.props;
-		console.log(this.props);
+		const { post } = this.props;
 
 		return (
 			<div>
 
+				{post &&
 				<div key={post.id}>
 					<div className="post-preview">
 						<h2 className="post-title">
@@ -43,13 +55,15 @@ class PostDetail extends Component {
 						<p className="post-meta">
 							Posted by <strong>{post.author}</strong> - on {formatPostDate( post.timestamp )}
 						</p>
-						<PubishControllers
+						<PublishControllers
+							onDelete={this.delete}
 							onVoteScore={this.voteScore}
 							voteScore={post.voteScore}
 						/>
 					</div>
 					<hr/>
 				</div>
+				}
 
 			</div>
 		);
@@ -57,9 +71,7 @@ class PostDetail extends Component {
 }
 
 function mapStateToProps( { posts } , props ) {
-
-	const postId = props.postId;
-
+	const { postId } = props;
 	return {
 		post: posts.entities[ postId ]
 	}
