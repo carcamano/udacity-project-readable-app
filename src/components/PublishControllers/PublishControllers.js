@@ -12,17 +12,26 @@ class PublishControllers extends Component {
 
 	static propTypes = {
 		voteScore: PropTypes.number.isRequired ,
-		onVoteScore: PropTypes.func.isRequired,
-		onDelete: PropTypes.func.isRequired
+		onVoteScore: PropTypes.func.isRequired ,
+		onEdit: PropTypes.func.isRequired ,
+		onDelete: PropTypes.func.isRequired ,
+		id: PropTypes.string
 	};
 
 
 	render() {
+
+		const { id } = this.props;
+		console.log( id )
+
 		return (
 			<div className="row">
 
 				<div className="col-md-8">
-					<button type="button" className="btn btn-outline-primary" id="btn-edit">
+					<button type="button" className="btn btn-outline-primary" id="btn-edit"
+					        onClick={( e ) => this.props.onEdit( id )}
+					        onMouseDown={( e ) => e.preventDefault()}
+					>
 						<i className="fa fa-pencil" aria-hidden="true"/>
 						<UncontrolledTooltip placement="top" target="btn-edit">
 							Edit
@@ -30,8 +39,8 @@ class PublishControllers extends Component {
 					</button>
 
 					<button type="button" className="btn btn-outline-danger ml-2" id="btn-delete"
-					        onClick={(e) => this.props.onDelete()}
-					        onMouseDown={(e) => e.preventDefault()}
+					        onClick={( e ) => this.props.onDelete( id )}
+					        onMouseDown={( e ) => e.preventDefault()}
 					>
 						<i className="fa fa-trash" aria-hidden="true"/>
 						<UncontrolledTooltip placement="top" target="btn-delete">
@@ -42,8 +51,8 @@ class PublishControllers extends Component {
 
 				<div className="col-md-4">
 					<button type="button" className="btn btn-outline-success"
-					        onClick={(e) => this.props.onVoteScore('upVote')}
-					        onMouseDown={(e) => e.preventDefault()}
+					        onClick={( e ) => this.props.onVoteScore( 'upVote' , id )}
+					        onMouseDown={( e ) => e.preventDefault()}
 					>
 						<i className="fa fa-thumbs-o-up" aria-hidden="true"/>
 					</button>
@@ -51,8 +60,8 @@ class PublishControllers extends Component {
 						{this.props.voteScore}
 					</div>
 					<button type="button" className="btn btn-outline-danger"
-					        onClick={(e) => this.props.onVoteScore('downVote')}
-					        onMouseDown={(e) => e.preventDefault()}
+					        onClick={( e ) => this.props.onVoteScore( 'downVote' , id )}
+					        onMouseDown={( e ) => e.preventDefault()}
 					>
 						<i className="fa fa-thumbs-o-down" aria-hidden="true"/>
 					</button>

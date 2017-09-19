@@ -11,7 +11,7 @@ const api = 'http://localhost:5001'
 let token = localStorage.token;
 if ( !token ) {
 	token = uuid.v4();
-	localStorage.setItem('token', token);
+	localStorage.setItem( 'token' , token );
 }
 
 const headers = {
@@ -22,28 +22,28 @@ const headers = {
 // GET Methods
 export const getCategories = () =>
 	fetch( `${api}/categories` , { headers } )
-		.then( res => res.json() )
-		.then( data => data.categories );
+	.then( res => res.json() )
+	.then( data => data.categories );
 
 export const getPosts = () =>
 	fetch( `${api}/posts` , { headers } )
-		.then( res => res.json() );
+	.then( res => res.json() );
 
 export const getPostsByCategories = ( category ) =>
 	fetch( `${api}/${category}/posts` , { headers } )
-		.then( res => res.json() );
+	.then( res => res.json() );
 
 export const getPost = ( postId ) =>
 	fetch( `${api}/posts/${postId}` , { headers } )
-		.then( res => res.json() );
+	.then( res => res.json() );
 
 export const getPostComments = ( postId ) =>
 	fetch( `${api}/posts/${postId}/comments` , { headers } )
-		.then( res => res.json() );
+	.then( res => res.json() );
 
 export const getComment = ( commentId ) =>
 	fetch( `${api}/comments/${commentId}` , { headers } )
-		.then( res => res.json() );
+	.then( res => res.json() );
 
 
 // POST Methods
@@ -124,7 +124,7 @@ export const deletePost = ( postId ) =>
 			...headers ,
 			'Content-Type': 'application/json'
 		} ,
-	} ).then( res => res.json() );
+	} ).then( res => postId );
 
 export const deleteComment = ( commentId ) =>
 	fetch( `${api}/comments/${commentId}` , {

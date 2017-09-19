@@ -8,33 +8,33 @@ export const LOAD_COMMENTS = 'LOAD_COMMENTS';
 export const LOAD_COMMENT = 'LOAD_COMMENT';
 export const DELETE_COMMENT = 'DELETE_COMMENT';
 
-export const loadComments = (comments) => {
+export const loadComments = ( comments ) => {
 	return {
-		type: LOAD_COMMENTS,
+		type: LOAD_COMMENTS ,
 		comments
 	}
 };
 
-export const fetchComments = (idPost) => dispatch => {
-	getPostComments(idPost)
-		.then(comments => dispatch(loadComments(comments)));
-};
-
-export const loadComment = (comment) => {
+export const loadComment = ( comment ) => {
 	return {
-		type: LOAD_COMMENT,
+		type: LOAD_COMMENT ,
 		comment
 	}
 };
 
-export const sendVote = (id, vote) => dispatch => {
-	voteComment(id, vote)
-		.then(comment => dispatch(loadComment(comment)));
-};
-
-export const deleteComment = (id) => {
+export const deleteComment = ( id ) => {
 	return {
-		type:DELETE_COMMENT,
+		type: DELETE_COMMENT ,
 		id
 	}
+};
+
+export const fetchComments = ( idPost ) => dispatch => {
+	getPostComments( idPost )
+	.then( comments => dispatch( loadComments( comments ) ) );
+};
+
+export const sendVote = ( id , vote ) => dispatch => {
+	voteComment( id , vote )
+	.then( comment => dispatch( loadComment( comment ) ) );
 };

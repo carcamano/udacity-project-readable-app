@@ -3,13 +3,18 @@
  */
 
 import React , { Component } from 'react';
+import { withRouter } from 'react-router-dom'
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import { deletePost , votePost } from '../../services/readable-api';
-import { loadPost } from '../../redux/actions/post';
+import * as API from '../../services/readable-api';
+import { deletePost , loadPost } from '../../redux/actions/post';
 import { formatPostDate } from '../../util/funcgen';
 import PublishControllers from '../PublishControllers/PublishControllers';
+import CommentList from '../CommentList/CommentList';
 
 
 class PostDetail extends Component {
@@ -20,19 +25,34 @@ class PostDetail extends Component {
 
 	voteScore = ( vote ) => {
 		const { postId , dispatch } = this.props;
-		votePost( postId , vote ).then( post => {
+		API.votePost( postId , vote ).then( post => {
 			dispatch( loadPost( post ) )
 		} );
 	};
 
-	delete = () => {
-		const { postId , dispatch } = this.props;
-		console.log(postId);
-		deletePost( postId ).then( () => {
-			dispatch( deletePost( postId ) );
-			window.history.back();
-		} )
+	edit = () => {
+		const { postId } = this.props;
+		this.props.history.push( `/post/edit/${postId}` );
+	};
 
+	delete = () => {
+		confirmAlert( {
+			title: 'Please Confirm' ,
+			message: 'You really wanna delete this post?' ,
+			childrenElement: () => <div></div> ,
+			confirmLabel: 'OK' ,
+			cancelLabel: 'Cancel' ,
+			onConfirm: () => {
+				const { postId , dispatch } = this.props;
+				API.deletePost( postId ).then( () => {
+					dispatch( deletePost( postId ) );
+					toast.success( 'Post Deleted!' );
+					window.history.back();
+				} )
+			} ,
+			onCancel: () => {
+			} ,
+		} )
 	};
 
 
@@ -57,11 +77,15 @@ class PostDetail extends Component {
 						</p>
 						<PublishControllers
 							onDelete={this.delete}
+							onEdit={this.edit}
 							onVoteScore={this.voteScore}
 							voteScore={post.voteScore}
 						/>
 					</div>
 					<hr/>
+					<CommentList
+						postId={post.id}
+					/>
 				</div>
 				}
 
@@ -78,4 +102,4 @@ function mapStateToProps( { posts } , props ) {
 }
 
 
-export default connect( mapStateToProps )( PostDetail );
+export default connect( mapStateToProps )( withRouter( PostDetail ) );
