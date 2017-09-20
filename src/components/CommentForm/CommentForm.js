@@ -4,12 +4,12 @@ import { toast } from 'react-toastify';
 
 class CommentForm extends Component {
 
-	propTypes = {
-		onSubmit: PropTypes.func ,
+	static propTypes = {
+		onSubmit: PropTypes.func.isRequired ,
 		id: PropTypes.string ,
+		author: PropTypes.string ,
 		body: PropTypes.string ,
 		parentId: PropTypes.string ,
-		hideBack: PropTypes.bool ,
 	};
 
 	state = {
@@ -26,48 +26,40 @@ class CommentForm extends Component {
 
 	submit = () => {
 
-		const { username , onSubmit , id , parentId } = this.props;
+		const { onSubmit , postId , id } = this.props;
 		const { author , body } = this.state;
 
 		if ( author.trim() === '' ) {
-			toast.error('Please fill Author\'s name');
+			toast.error( 'Please fill Author\'s name' );
 			return;
 		}
 
 		if ( body.trim() === '' ) {
-			toast.error('Please fill comment field');
+			toast.error( 'Please fill comment field' );
 			return;
 		}
 
 		onSubmit( {
-			timestamp: Date.now() ,
-			owner: username ,
-			author: username ,
-			parentId ,
+			id ,
+			author ,
+			parentId: postId ,
 			body ,
 		} );
 		this.setState( { author: '' , body: '' } );
+		console.log( this.state );
 
 	};
 
-	componentDidMount() {
-
-		const { author , body } = this.props;
-
-		if ( body ) {
-			this.body.value = body;
-		}
-
-		if ( body ) {
-			this.body.value = body;
-		}
-
-	}
-
 	render() {
 
-		const { author , body } = this.state;
-		const { hideBack } = this.props;
+		const { id , author , body } = this.state;
+		if ( id ) {
+			const { author , body } = this.props;
+			this.setState( {
+				author ,
+				body
+			} );
+		}
 
 		return (
 			<form onSubmit={this.submit}>
@@ -75,13 +67,15 @@ class CommentForm extends Component {
 				<div className="form-group">
 					<label htmlFor="author">Name</label>
 					<input type="text" onChange={( e ) => this.onInputChange( e )}
-					       className="form-control" id="author" name="author" placeholder="Type your name"/>
+					       className="form-control" id="author" name="author" placeholder="Type your name"
+					       value={author}/>
 				</div>
 
 				<div className="form-group">
 					<label htmlFor="comment">Comment</label>
 					<textarea type="text" rows={5} onChange={( e ) => this.onInputChange( e )}
-					          className="form-control" id="body" name="body" placeholder="Type your comment"/>
+					          className="form-control" id="body" name="body" placeholder="Type your comment"
+					          value={body}/>
 				</div>
 
 				<div className="form-group text-right">
@@ -89,7 +83,7 @@ class CommentForm extends Component {
 					        onClick={( e ) => this.submit()}
 					        onMouseDown={( e ) => e.preventDefault()}
 					>
-						Comment
+						Save
 					</button>
 				</div>
 

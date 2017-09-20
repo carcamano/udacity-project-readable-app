@@ -22,7 +22,6 @@ class PublishControllers extends Component {
 	render() {
 
 		const { id } = this.props;
-		console.log( id )
 
 		return (
 			<div className="row">

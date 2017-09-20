@@ -7,6 +7,8 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import sortBy from 'sort-by';
+import scrollToComponent from 'react-scroll-to-component';
+import Modal from 'react-modal';
 
 import * as API from '../../services/readable-api';
 import { formatPostDate } from '../../util/funcgen';
@@ -18,8 +20,15 @@ import CommentForm from '../CommentForm/CommentForm';
 
 class CommentList extends Component {
 
+	state = {
+		isEditModalOpen: false ,
+		idEditComment: '' ,
+		authorEditComment: '' ,
+		bodyEditComment: '' ,
+	};
+
 	static propTypes = {
-		postId: PropTypes.string
+		postId: PropTypes.string.isRequired
 	};
 
 	voteScore = ( vote , commentId ) => {
@@ -29,7 +38,37 @@ class CommentList extends Component {
 		} );
 	};
 
-	edit = ( commentId ) => {
+	addComment = ( data ) => {
+		const { postId , dispatch } = this.props;
+		API.addCommentToPost( postId , data.body , data.author ).then( comment => {
+			dispatch( loadComment( comment ) );
+			toast.success( 'Comment successfully saved!' );
+			scrollToComponent( this.scrollPos , { offset: 0 , align: 'top' , duration: 500 } )
+		} ).catch( error => toast.error( 'Can\'t save the comment :( ' ) );
+	};
+
+	openModal = ( commentId ) => {
+		const { comments } = this.props;
+		const comment = comments.filter( c => c.id === commentId );
+
+		this.setState( {
+			isEditModalOpen: true ,
+			idEditComment: commentId ,
+			authorEditComment: comment[ 0 ].author ,
+			bodyEditComment: comment[ 0 ].body ,
+		} );
+	};
+
+	closeModal = () => {
+		this.setState( { isEditModalOpen: false } );
+	};
+
+	editComment = ( body ) => {
+		const { dispatch } = this.props;
+		API.editComment().then( comment => {
+			dispatch( loadComment( comment ) );
+			this.closeModal();
+		} );
 	};
 
 	delete = ( commentId ) => {
@@ -54,16 +93,22 @@ class CommentList extends Component {
 	componentDidMount() {
 		const { postId , dispatch } = this.props;
 		dispatch( fetchComments( postId ) );
-	}
+	};
 
 	render() {
 
+		const { isEditModalOpen , idEditComment , authorEditComment , bodyEditComment } = this.state;
 		const { postId , comments } = this.props;
+
+		console.log( 'isEditModalOpen' , isEditModalOpen );
+
 		let postComments = comments.filter( c => c.parentId === postId );
 		postComments.sort( sortBy( '-timestamp' ) );
 
 		return (
-			<div>
+			<div ref={( section ) => {
+				this.scrollPos = section;
+			}}>
 
 				<div className="comment-area col-sm-10">
 					<h3>Comments</h3>
@@ -79,7 +124,7 @@ class CommentList extends Component {
 							<PublishControllers
 								voteScore={comment.voteScore}
 								onVoteScore={this.voteScore}
-								onEdit={this.edit}
+								onEdit={this.openModal}
 								onDelete={this.delete}
 								id={comment.id}
 							/>
@@ -90,12 +135,40 @@ class CommentList extends Component {
 
 				<div className="comment-area col-sm-10 mt-3">
 					<h3>Add Comment</h3>
-					<CommentForm/>
+					<CommentForm
+						onSubmit={this.addComment}
+					/>
 				</div>
 
-				</div>
+				{isEditModalOpen &&
+				<Modal
+					className='modal'
+					overlayClassName='overlay'
+					isOpen={isEditModalOpen}
+					onRequestClose={this.closeModal}
+					contentLabel='Modal'
+				>
+					{isEditModalOpen &&
+
+					<div className="row">
+						<div className="comment-area col-sm-10">
+							<h3>Edit Comment</h3>
+							<CommentForm
+								onSubmit={this.editComment}
+								id={idEditComment}
+								author={authorEditComment}
+								body={bodyEditComment}
+								parentId={postId}
+							/>
+						</div>
+					</div>
+					}
+				</Modal>
+				}
+
+			</div>
 		);
-	}
+	};
 }
 
 function mapStateToProps( { comments } ) {
