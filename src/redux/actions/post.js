@@ -3,6 +3,7 @@
  */
 
 import { getPosts , votePost } from '../../services/readable-api';
+import { fetchComments } from './comment';
 
 export const LOAD_POSTS = 'LOAD_POSTS';
 export const LOAD_POST = 'LOAD_POST';
@@ -31,10 +32,15 @@ export const deletePost = ( id ) => {
 
 export const sendVote = ( id , vote ) => dispatch => {
 	votePost( id , vote )
-		.then( post => dispatch( loadPost( post ) ) );
+	.then( post => {
+		dispatch( loadPost( post ) );
+	} );
 };
 
 export const fetchPosts = () => dispatch => {
 	getPosts()
-		.then( posts => dispatch( loadPosts( posts ) ) );
+	.then( posts => {
+		dispatch( loadPosts( posts ) )
+		posts.map( post => dispatch( fetchComments( post.id ) ) );
+	} );
 };

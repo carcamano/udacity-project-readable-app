@@ -95,14 +95,14 @@ export const voteComment = ( commentId , option ) =>
 
 
 // PUT Methods
-export const editPost = ( postId , title , body ) =>
+export const editPost = ( postId , title , body , author , category ) =>
 	fetch( `${api}/posts/${postId}` , {
 		method: 'PUT' ,
 		headers: {
 			...headers ,
 			'Content-Type': 'application/json'
 		} ,
-		body: JSON.stringify( { title , body } )
+		body: JSON.stringify( { title , body , author , category } )
 	} ).then( res => res.json() );
 
 export const editComment = ( commentId , title , body ) =>

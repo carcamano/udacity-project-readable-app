@@ -3,7 +3,7 @@
  */
 
 import React , { Component } from 'react';
-import { withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
@@ -32,7 +32,7 @@ class PostDetail extends Component {
 
 	edit = () => {
 		const { postId } = this.props;
-		this.props.history.push( `/post/edit/${postId}` );
+		this.props.history.push( `/post-edit/${postId}` );
 	};
 
 	delete = () => {
@@ -63,13 +63,13 @@ class PostDetail extends Component {
 		return (
 			<div>
 
-				{post &&
+				{post && !post.deleted &&
 				<div key={post.id}>
 					<div className="post-preview">
 						<h2 className="post-title">
 							{post.title}
 						</h2>
-						<p>
+						<p className="text-justify">
 							{post.body}
 						</p>
 						<p className="post-meta">

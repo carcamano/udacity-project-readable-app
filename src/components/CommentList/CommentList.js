@@ -102,7 +102,7 @@ class CommentList extends Component {
 		const { postId , comments } = this.props;
 
 		let postComments = comments.filter( c => c.parentId === postId );
-		postComments.sort( sortBy( '-timestamp' ) );
+		postComments.sort( sortBy( '-voteScore' ) );
 
 		return (
 			<div ref={( section ) => {
@@ -149,6 +149,7 @@ class CommentList extends Component {
 							<h3>Edit Comment</h3>
 							<CommentForm
 								onSubmit={this.editComment}
+								onClose={this.closeModal}
 								id={idEditComment}
 								author={authorEditComment}
 								body={bodyEditComment}

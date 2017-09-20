@@ -39,7 +39,7 @@ class TopBar extends Component {
 							</ul>
 						</li>
 						<li className="nav-bar-list-item">
-							<Link to={'/post/add'}
+							<Link to={'/post-add'}
 							      className="nav-bar-link">Add New Post</Link>
 						</li>
 					</ul>

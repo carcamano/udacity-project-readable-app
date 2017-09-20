@@ -6,6 +6,7 @@ class CommentForm extends Component {
 
 	static propTypes = {
 		onSubmit: PropTypes.func.isRequired ,
+		onClose: PropTypes.func ,
 		id: PropTypes.string ,
 		author: PropTypes.string ,
 		body: PropTypes.string ,
@@ -79,6 +80,15 @@ class CommentForm extends Component {
 				</div>
 
 				<div className="form-group text-right">
+					{this.props.onClose &&
+					<button type="button" className="btn btn-outline-danger mr-2"
+					        onClick={( e ) => this.props.onClose()}
+					        onMouseDown={( e ) => e.preventDefault()}
+					>
+						Cancel
+					</button>
+					}
+
 					<button type="button" className="btn btn-outline-info"
 					        onClick={( e ) => this.submit()}
 					        onMouseDown={( e ) => e.preventDefault()}

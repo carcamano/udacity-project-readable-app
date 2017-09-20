@@ -8,7 +8,7 @@ import HomeScene from './scenes/Home/Home'
 import PostScene from './scenes/Post/Post'
 import { fetchPosts } from './redux/actions/post';
 import { fetchCategories } from './redux/actions/category';
-import { fetchComments } from './redux/actions/comment';
+import PostAddEditScene from './scenes/PostAddEdit/PostAddEdit';
 
 class App extends Component {
 
@@ -16,7 +16,6 @@ class App extends Component {
 		const { dispatch } = this.props;
 		dispatch( fetchPosts() );
 		dispatch( fetchCategories() );
-		dispatch( fetchComments() );
 	}
 
 
@@ -25,9 +24,12 @@ class App extends Component {
 		return (
 			<BrowserRouter>
 				<div>
+
 					<Route exact path='/' render={() => <HomeScene/>}/>
-					<Route path="/category/:selectedCategory" component={HomeScene}/>
-					<Route path="/post/:postId" component={PostScene}/>
+					<Route exact path="/category/:selectedCategory" component={HomeScene}/>
+					<Route exact path="/post/:postId" component={PostScene}/>
+					<Route exact path="/post-add" component={PostAddEditScene}/>
+					<Route exact path="/post-edit/:postId" component={PostAddEditScene}/>
 
 					<ToastContainer
 						position="top-right"
