@@ -68,6 +68,7 @@ class CommentList extends Component {
 		API.editComment( data.id , data.title , data.body ).then( comment => {
 			dispatch( loadComment( comment ) );
 			this.closeModal();
+			toast.success( 'Edition Saved!' );
 		} );
 	};
 
