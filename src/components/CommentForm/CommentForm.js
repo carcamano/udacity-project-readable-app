@@ -46,20 +46,20 @@ class CommentForm extends Component {
 			body ,
 		} );
 		this.setState( { author: '' , body: '' } );
-		console.log( this.state );
-
 	};
+
+	componentDidMount() {
+		if ( this.props.id ) {
+			this.setState( {
+				author: this.props.author ,
+				body: this.props.body
+			} );
+		}
+	}
 
 	render() {
 
-		const { id , author , body } = this.state;
-		if ( id ) {
-			const { author , body } = this.props;
-			this.setState( {
-				author ,
-				body
-			} );
-		}
+		const { author , body } = this.state;
 
 		return (
 			<form onSubmit={this.submit}>

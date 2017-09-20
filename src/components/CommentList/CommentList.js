@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
 import sortBy from 'sort-by';
 import scrollToComponent from 'react-scroll-to-component';
-import Modal from 'react-modal';
+import ReactModal from 'react-modal';
 
 import * as API from '../../services/readable-api';
 import { formatPostDate } from '../../util/funcgen';
@@ -63,9 +63,9 @@ class CommentList extends Component {
 		this.setState( { isEditModalOpen: false } );
 	};
 
-	editComment = ( body ) => {
+	editComment = ( data ) => {
 		const { dispatch } = this.props;
-		API.editComment().then( comment => {
+		API.editComment( data.id , data.title , data.body ).then( comment => {
 			dispatch( loadComment( comment ) );
 			this.closeModal();
 		} );
@@ -99,8 +99,6 @@ class CommentList extends Component {
 
 		const { isEditModalOpen , idEditComment , authorEditComment , bodyEditComment } = this.state;
 		const { postId , comments } = this.props;
-
-		console.log( 'isEditModalOpen' , isEditModalOpen );
 
 		let postComments = comments.filter( c => c.parentId === postId );
 		postComments.sort( sortBy( '-timestamp' ) );
@@ -140,18 +138,13 @@ class CommentList extends Component {
 					/>
 				</div>
 
-				{isEditModalOpen &&
-				<Modal
-					className='modal'
-					overlayClassName='overlay'
+				<ReactModal
 					isOpen={isEditModalOpen}
 					onRequestClose={this.closeModal}
 					contentLabel='Modal'
 				>
-					{isEditModalOpen &&
-
 					<div className="row">
-						<div className="comment-area col-sm-10">
+						<div className="col-sm-12 col-md-4 m0a">
 							<h3>Edit Comment</h3>
 							<CommentForm
 								onSubmit={this.editComment}
@@ -162,9 +155,7 @@ class CommentList extends Component {
 							/>
 						</div>
 					</div>
-					}
-				</Modal>
-				}
+				</ReactModal>
 
 			</div>
 		);
