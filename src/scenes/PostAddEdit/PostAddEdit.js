@@ -9,35 +9,29 @@ import { toast } from 'react-toastify';
 import TopBar from '../../components/TopBar/TopBar';
 import FooterBar from '../../components/FooterBar/FooterBar';
 import PostForm from '../../components/PostForm/PostForm';
-import * as API from '../../services/readable-api';
-import { loadPost } from '../../redux/actions/post';
+import { sendAddPost , sendEditPost } from '../../redux/actions/post';
 import { connect } from 'react-redux';
 
 class PostAddEditScene extends Component {
 
 	addPost = ( data ) => {
 		const { dispatch } = this.props;
-		API.addPost( data.title , data.body , data.author , data.category ).then( post => {
-			dispatch( loadPost( post ) );
-			toast.success( 'Post successfully saved!' );
-			this.props.history.push( `/post/${post.id}` );
-		} ).catch( error => toast.error( 'Can\'t save the Post :( ' ) );
+		dispatch( sendAddPost( data ) );
+		toast.success( 'Post successfully saved!' );
+		this.props.history.push( '/' );
 	};
 
 	editPost = ( data ) => {
 		const { dispatch } = this.props;
 		const postId = this.props.match && this.props.match.params ? this.props.match.params.postId : '';
-
-		API.editPost( postId , data.title , data.body , data.author , data.category ).then( post => {
-			dispatch( loadPost( post ) );
-			toast.success( 'Post successfully edited!' );
-			this.props.history.push( `/post/${postId}` );
-		} ).catch( error => toast.error( 'Can\'t edit the Post :( ' ) );
+		dispatch( sendEditPost( postId , data ) );
+		toast.success( 'Post successfully edited!' );
+		this.props.history.push( `/post/${postId}` );
 	};
 
 	cancelEdition = () => {
 		window.history.back();
-	}
+	};
 
 	render() {
 

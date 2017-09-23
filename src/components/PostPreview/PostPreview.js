@@ -8,8 +8,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import sortBy from 'sort-by';
 
-import * as API from '../../services/readable-api';
-import { loadPost , loadPosts } from '../../redux/actions/post';
+import { fetchPosts , sendVote } from '../../redux/actions/post';
 import { formatPostDate } from '../../util/funcgen';
 import PublishControllers from '../PublishControllers/PublishControllers';
 
@@ -23,16 +22,12 @@ class PostPreview extends Component {
 
 	componentDidMount() {
 		const { dispatch } = this.props;
-		API.getPosts().then( res => {
-			dispatch( loadPosts( res ) );
-		} );
+		dispatch( fetchPosts() );
 	}
 
 	voteScore = ( vote , id ) => {
 		const { dispatch } = this.props;
-		API.votePost( id , vote ).then( post => {
-			dispatch( loadPost( post ) )
-		} );
+		dispatch( sendVote( id , vote ) );
 	};
 
 	getPostComment = ( postId , comments ) => {

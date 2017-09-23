@@ -10,10 +10,9 @@ import sortBy from 'sort-by';
 import scrollToComponent from 'react-scroll-to-component';
 import ReactModal from 'react-modal';
 
-import * as API from '../../services/readable-api';
 import { formatPostDate } from '../../util/funcgen';
 import { confirmAlert } from 'react-confirm-alert';
-import { deleteComment , fetchComments , loadComment } from '../../redux/actions/comment';
+import { fetchComments , sendAddCommentToPost , sendDeleteComment , sendEditComment , sendVote } from '../../redux/actions/comment';
 import PublishControllers from '../PublishControllers/PublishControllers';
 import './CommentList.css';
 import CommentForm from '../CommentForm/CommentForm';
@@ -33,18 +32,14 @@ class CommentList extends Component {
 
 	voteScore = ( vote , commentId ) => {
 		const { dispatch } = this.props;
-		API.voteComment( commentId , vote ).then( post => {
-			dispatch( loadComment( post ) )
-		} );
+		dispatch( sendVote( commentId , vote ) );
 	};
 
 	addComment = ( data ) => {
 		const { postId , dispatch } = this.props;
-		API.addCommentToPost( postId , data.body , data.author ).then( comment => {
-			dispatch( loadComment( comment ) );
-			toast.success( 'Comment successfully saved!' );
-			scrollToComponent( this.scrollPos , { offset: 0 , align: 'top' , duration: 500 } )
-		} ).catch( error => toast.error( 'Can\'t save the comment :( ' ) );
+		dispatch( sendAddCommentToPost( postId , data ) );
+		toast.success( 'Comment successfully saved!' );
+		scrollToComponent( this.scrollPos , { offset: 0 , align: 'top' , duration: 500 } )
 	};
 
 	openModal = ( commentId ) => {
@@ -65,11 +60,10 @@ class CommentList extends Component {
 
 	editComment = ( data ) => {
 		const { dispatch } = this.props;
-		API.editComment( data.id , data.title , data.body ).then( comment => {
-			dispatch( loadComment( comment ) );
-			this.closeModal();
-			toast.success( 'Edition Saved!' );
-		} );
+		dispatch( sendEditComment( data ) );
+		this.closeModal();
+		toast.success( 'Edition Saved!' );
+
 	};
 
 	delete = ( commentId ) => {
@@ -81,10 +75,8 @@ class CommentList extends Component {
 			cancelLabel: 'Cancel' ,
 			onConfirm: () => {
 				const { dispatch } = this.props;
-				API.deleteComment( commentId ).then( () => {
-					dispatch( deleteComment( commentId ) );
-					toast.success( 'Comment Deleted!' );
-				} )
+				dispatch( sendDeleteComment( commentId ) );
+				toast.success( 'Comment Deleted!' );
 			} ,
 			onCancel: () => {
 			} ,

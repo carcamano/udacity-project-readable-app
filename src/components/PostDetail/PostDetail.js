@@ -10,8 +10,7 @@ import { toast } from 'react-toastify';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
-import * as API from '../../services/readable-api';
-import { deletePost , loadPost } from '../../redux/actions/post';
+import { sendDeletePost , sendVote } from '../../redux/actions/post';
 import { formatPostDate } from '../../util/funcgen';
 import PublishControllers from '../PublishControllers/PublishControllers';
 import CommentList from '../CommentList/CommentList';
@@ -25,9 +24,7 @@ class PostDetail extends Component {
 
 	voteScore = ( vote ) => {
 		const { postId , dispatch } = this.props;
-		API.votePost( postId , vote ).then( post => {
-			dispatch( loadPost( post ) )
-		} );
+		dispatch( sendVote( postId , vote ) );
 	};
 
 	edit = () => {
@@ -44,11 +41,9 @@ class PostDetail extends Component {
 			cancelLabel: 'Cancel' ,
 			onConfirm: () => {
 				const { postId , dispatch } = this.props;
-				API.deletePost( postId ).then( () => {
-					dispatch( deletePost( postId ) );
-					toast.success( 'Post Deleted!' );
-					window.history.back();
-				} )
+				dispatch( sendDeletePost( postId ) );
+				toast.success( 'Post Deleted!' );
+				this.props.history.push( '/' );
 			} ,
 			onCancel: () => {
 			} ,

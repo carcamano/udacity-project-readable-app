@@ -6,7 +6,7 @@ This project is the seccond project for Udacity Nanodegree React training.
 
 ### Server / Backend
 ```shell
-git clone https://github.com/udacity/reactnd-project-readable-starter.git
+git clone https://github.com/carcamano/reactnd-project-readable-starter.git
 cd reactnd-project-readable-starter
 npm install
 npm start
